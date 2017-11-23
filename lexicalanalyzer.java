@@ -77,6 +77,12 @@ public class lexicalanalyzer implements Lex{
 				} else if(status == LexerStatus.DOT_STATUS) {
 					status = LexerStatus.IN_FARC_PART_STATUS;
 				}
+			} else if(currentChar == '(') {
+				token.setKind(TokenKind.LP_TOKEN);
+				return token;
+			} else if(currentChar == ')') {
+				token.setKind(TokenKind.RP_TOKEN);
+				return token;
 			} else if(currentChar == '.') {
 				status = LexerStatus.DOT_STATUS;
 			} else if(currentChar == '\0'){
@@ -89,6 +95,7 @@ public class lexicalanalyzer implements Lex{
 			
 		}
 		token.setKind(TokenKind.END_OF_LINE_TOKEN);
+		System.out.println("never hit");
 		return token;
 	}
 	

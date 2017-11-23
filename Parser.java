@@ -48,6 +48,7 @@ public class Parser {
 				v1 -= v2;
 			} else {
 				ungetAheadToken(token);
+				break;
 			}
 		}
 		return v1;
@@ -76,14 +77,44 @@ public class Parser {
 	
 	private double parsePrimary() throws Exception {
 		Token token;
-		
-		token = getAheadToken();
-		if(token.getKind().equals(TokenKind.NUMBER_TOKEN)) {
-			return token.getValue();
-		} else {
-			System.out.println("error !");
-			throw new Exception();
+		double v1;
+		boolean flag = false;
+		while(true) {
+			token = getAheadToken();
+			
+			if(token.getKind().equals(TokenKind.SUB_OPERATOR_TORKN)) {
+				if(flag) {
+					System.out.println(" - error!");
+					throw new Exception(); 
+				} else {
+					flag = true;
+				}
+				continue;
+			} 
+			
+			if(token.getKind().equals(TokenKind.NUMBER_TOKEN)) {
+				v1 = token.getValue();
+				break;
+			} else if(token.getKind().equals(TokenKind.LP_TOKEN)) {
+				v1 = parseExpression();
+				token = getAheadToken();
+				if(!token.getKind().equals(TokenKind.RP_TOKEN)) {
+					System.out.println(" (  ) error!");
+					throw new Exception(); 
+				}
+				break;
+			} else {
+				System.out.println("error !");
+				throw new Exception();
+			}
 		}
+		
+		if(flag) {
+			return -v1;
+		} else {
+			return v1;
+		}
+		
 	}
 	
 	public static void main(String[] args) {
